@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const Auth = require("../MODEL/auth");
 
 const signUp = async (req, res) => {
@@ -15,6 +14,11 @@ const signUp = async (req, res) => {
         email: email,
         username: username,
         password: password,
+      });
+
+      res.status(201).json({
+        message: "User Signed up successfully",
+        user: signedUp,
       });
     }
   } catch (error) {
