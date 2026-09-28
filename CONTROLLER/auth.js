@@ -1,14 +1,32 @@
-const mongoose = require('mongoose');
-const Auth = require('../MODEL/auth');
+const mongoose = require("mongoose");
+const Auth = require("../MODEL/auth");
 
-const signUp = async (req,res) =>{
-    res.send('Sign Up function');
+const signUp = async (req, res) => {
+  try {
+    const { fullname, email, username, password } = req.body;
+    const existingUser = await Auth.findOne({ username });
+    if (existingUser) {
+      return res.status(401).json({
+        message: "User is already registered by this email",
+      });
+    } else {
+      const signedUp = await Auth.create({
+        fullname: fullname,
+        email: email,
+        username: username,
+        password: password,
+      });
+    }
+  } catch (error) {
+    return res.status(401).json({
+      message: "Error occured during user sign up",
+      error: error,
+    });
+  }
 };
 
-const logIn = async (req,res) =>{
-    res.send('Log In function');
+const logIn = async (req, res) => {
+  res.send("Log In function");
 };
 
-module.exports = {signUp, logIn}
-
-
+module.exports = { signUp, logIn };
