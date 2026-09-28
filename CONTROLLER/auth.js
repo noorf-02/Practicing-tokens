@@ -39,6 +39,15 @@ const logIn = async (req, res) => {
       message: "User is not registered. Sign Up first",
     });
   }
+  const matchedPassword = await bcrypt.compare(password, existingUser.password);
+  if(!matchedPassword){
+    return res.status(401).json({
+        message:"Username or password invalid"
+    });
+  }
+  res.status(201).json({
+        message:'User Logged in successfully'
+    })
 };
 
 module.exports = { signUp, logIn };
