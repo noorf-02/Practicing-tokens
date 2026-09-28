@@ -1,4 +1,5 @@
 const Auth = require("../MODEL/auth");
+const bcrypt = require("bcryptjs");
 
 const signUp = async (req, res) => {
   try {
@@ -9,11 +10,12 @@ const signUp = async (req, res) => {
         message: "User is already registered by this email",
       });
     } else {
+      const hashedPassword = await bcrypt.hash(password, 10);
       const signedUp = await Auth.create({
         fullname: fullname,
         email: email,
         username: username,
-        password: password,
+        password: hashedPassword,
       });
 
       res.status(201).json({
@@ -30,7 +32,13 @@ const signUp = async (req, res) => {
 };
 
 const logIn = async (req, res) => {
-  res.send("Log In function");
+  const { username, password } = req.body;
+  const existingUser = await Auth.findOne({ username });
+  if (!existingUser) {
+    return res.status(401).json({
+      message: "User is not registered. Sign Up first",
+    });
+  }
 };
 
 module.exports = { signUp, logIn };
