@@ -5,6 +5,10 @@ const app = express();
 const port = process.env.PORT;
 const connectDB = require('./DB/connectDB');
 connectDB();
+const authRouter = require('./VIEW/auth');
+
+app.use(express.json());
+app.use(authRouter);
 
 app.get('/', (req,res)=>{
     res.send("Auth, token, protect and form handling");

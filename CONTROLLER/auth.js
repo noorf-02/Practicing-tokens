@@ -1,27 +1,14 @@
-const mongoose = require("mongoose");
-const { Schema } = mongoose;
+const mongoose = require('mongoose');
+const Auth = require('../MODEL/auth');
 
-const authSchema = new Schema({
-  fullname: {
-    type: String,
-    required: true,
-    maxlength: [25, "Name should not exceed 25 characters"],
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required:true,
-    minlength:[8, "Password must be at least 8 characters"]
-  },
-});
+const signUp = async (req,res) =>{
+    res.send('Sign Up function');
+};
 
-const Auth = mongoose.model('Auth', authSchema);
-module.exports = Auth;
+const logIn = async (req,res) =>{
+    res.send('Log In function');
+};
+
+module.exports = {signUp, logIn}
+
+
