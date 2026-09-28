@@ -1,5 +1,6 @@
 const Auth = require("../MODEL/auth");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const signUp = async (req, res) => {
   try {
@@ -40,14 +41,33 @@ const logIn = async (req, res) => {
     });
   }
   const matchedPassword = await bcrypt.compare(password, existingUser.password);
-  if(!matchedPassword){
+  if (!matchedPassword) {
     return res.status(401).json({
-        message:"Username or password invalid"
+      message: "Username or password invalid",
     });
   }
+  const token = await jwt.sign(
+    {
+      fullname: existingUser.fullname,
+      username: existingUser.username,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "10d",
+    },
+  );
+
   res.status(201).json({
-        message:'User Logged in successfully'
-    })
+    message: "User Logged in successfully",
+    token: token,
+    user: existingUser
+  });
 };
 
-module.exports = { signUp, logIn };
+const decoded = (req,res)=>{
+    const token = req.headers.authorization?.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("Decoded Token", decodedToken);
+}
+
+module.exports = { signUp, logIn,decoded };
