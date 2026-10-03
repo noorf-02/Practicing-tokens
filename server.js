@@ -6,7 +6,9 @@ const port = process.env.PORT;
 const connectDB = require('./DB/connectDB');
 connectDB();
 const authRouter = require('./VIEW/auth');
+const cors = require('cors');
 
+app.use(cors());
 app.use(express.json());
 app.use(authRouter);
 
